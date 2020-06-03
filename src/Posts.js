@@ -117,6 +117,24 @@ const Posts = () => {
                 console.log(error.response.data);
             });
     };
+    const handleCouponSubmit = data => {
+        const coupon = {
+            code: data.code,
+            discount_type: "percent",
+            amount: data.discount,
+            individual_use: true,
+            exclude_sale_items: true,
+            minimum_amount: "100.00"
+        };
+
+        WooCommerce.post("coupons", coupon)
+            .then((response) => {
+                console.log(response.data);
+            })
+            .catch((error) => {
+                console.log(error.response.data);
+            });
+    };
     return (
         <div className="wrapper">
             <div className="product-wrapper">
@@ -141,7 +159,17 @@ const Posts = () => {
 
                     )}
                 </ul>
+                <div className="form-wrapper">
+                    <form onSubmit={handleCouponSubmit(onSubmit)}>
 
+                        {/* register your input into the hook by invoking the "register" function */}
+                        <label>Code:</label>
+                        <input label="Code" name="code" ref={register({ required: true })} />
+                        <input label="Discount" name="discount" ref={register({ required: true })} />
+
+                        <input type="submit" />
+                    </form>
+                </div>
             </div>
 
             <div className="form-wrapper">

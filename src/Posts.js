@@ -17,16 +17,15 @@ const Posts = () => {
 
 
     useEffect(() => {
-        async function loadData() {
-            WooCommerce.get('products').then(function (result) {
-                console.log(JSON.parse(result.body));
-                setData(JSON.parse(result.body));
-            });
-        }
         loadData();
     }, []);
 
-
+    async function loadData() {
+        WooCommerce.get('products').then(function (result) {
+            console.log(JSON.parse(result.body));
+            setData(JSON.parse(result.body));
+        });
+    }
     const handleNameChange = (id, e) => {
         setData(
             data.map(item => {
@@ -54,16 +53,27 @@ const Posts = () => {
 
     const updateProduct = (id) => {
         let product = data.find(product => product.id === id);
-        WooCommerce.put("product", product, (res) => {
-            console.log(res);
-        });
+
+        WooCommerce.put(`product/${id}`, product)
+            .then((response) => {
+                console.log(response.data);
+            })
+            .catch((error) => {
+                console.log(error.response.data);
+            });
     }
 
     const deleteProduct = (id) => {
-        let product = data.find(product => product.id === id);
-        WooCommerce.delete("product", product, (res) => {
-            console.log(res);
-        });
+        WooCommerce.delete(`products/${id}`, {
+            force: true
+        })
+            .then((response) => {
+                console.log(response.data);
+                loadData();
+            })
+            .catch((error) => {
+                console.log(error.response.data);
+            });
     }
 
     const onSubmit = data => {
@@ -91,6 +101,7 @@ const Posts = () => {
         WooCommerce.post("products", product)
             .then((response) => {
                 console.log(response.data);
+                loadData();
             })
             .catch((error) => {
                 console.log(error.response.data);

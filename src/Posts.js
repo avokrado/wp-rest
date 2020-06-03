@@ -13,6 +13,7 @@ const WooCommerce = new WooCommerceAPI({
 
 const Posts = () => {
     const [data, setData] = useState(null);
+    const [coupons, setCoupons] = useState(null);
     const { register, handleSubmit, errors } = useForm();
 
 
@@ -25,6 +26,15 @@ const Posts = () => {
             console.log(JSON.parse(result.body));
             setData(JSON.parse(result.body));
         });
+
+        WooCommerce.get("coupons")
+            .then((response) => {
+                console.log(response.data);
+                setCoupons(JSON.parse(response.body));
+            })
+            .catch((error) => {
+                console.log(error.response.data);
+            });
     }
     const handleNameChange = (id, e) => {
         setData(
@@ -120,6 +130,18 @@ const Posts = () => {
                         <button onClick={() => deleteProduct(data.id)}>Delete</button>
                     </div>
                 )}
+            </div>
+            <div className="product-wrapper">
+                Coupons:
+                <ul>
+                    {coupons && coupons.map((data, index) =>
+                        <li key={index}>
+                            Code: {data.code}, Amount: {data.amount}
+                        </li>
+
+                    )}
+                </ul>
+
             </div>
 
             <div className="form-wrapper">

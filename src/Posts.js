@@ -152,12 +152,14 @@ const Posts = () => {
             <div className="product-wrapper">
                 Coupons:
                 <ul>
-                    {coupons && coupons.map((data, index) =>
+                    {coupons ? coupons.map((data, index) =>
                         <li key={index}>
                             Code: {data.code}, Amount: {data.amount}
                         </li>
 
-                    )}
+                    ) :
+                        <small>No coupons yet</small>
+                    }
                 </ul>
                 <div className="form-wrapper">
                     <form onSubmit={handleCouponSubmit(onSubmit)}>
